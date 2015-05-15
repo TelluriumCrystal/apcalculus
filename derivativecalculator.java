@@ -1,4 +1,4 @@
-// Billy Hansen
+// Billy Hansen and Hashem Anabtawi
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -11,9 +11,9 @@ public class derivativecalculator
 {
  
  private ArrayList<Float> numarr;
- private float[] positionarr;
- private float[] velocityarr;
- private float[] accelerationarr;
+ private ArrayList<Float> positionarr;
+ private ArrayList<Float> velocityarr;
+ private ArrayList<Float> accelerationarr;
   
  public ArrayList<Float> processData() throws FileNotFoundException
  {
@@ -57,7 +57,7 @@ public class derivativecalculator
        else if (line.charAt(i) == ',')
        {
         numarr.add(Float.parseFloat(temp));
-        System.out.println(temp);
+        // System.out.println(temp);
         temp = "";
        }
       }
@@ -67,33 +67,62 @@ public class derivativecalculator
   return numarr;
  }
   
- public float[] getPositionData()
+ public ArrayList<Float> getPositionData(ArrayList<Float> fopo)
  {
-  positionarr = new float[100];
+  positionarr = new ArrayList<Float>(); 
+  for (int i = 0; i < fopo.size(); i = i + 4)
+  {
+   positionarr.add(fopo.get(i));
+   positionarr.add(fopo.get(i+1));
+  }
+  System.out.println(positionarr);
+  System.out.println();
   return positionarr;
  }
  
- public float[] getVelocityData()
- {
-  velocityarr = new float[100];
-  return velocityarr;
+ public ArrayList<Float> calculateDerivative(ArrayList<Float> fopo)
+ { 
+  velocityarr = new ArrayList<Float>();
+  for (int i = 0; i < fopo.size(); i = i + 4)
+  {
+   float x = 0;
+   x = ((fopo.get(i+3) - fopo.get(i+1)) / (fopo.get(i+2) - fopo.get(i)));
+   velocityarr.add(x);
+  }
+  System.out.println(velocityarr);
+  System.out.println();
+  return velocityarr; 
  }
  
- public float[] getAccelerationData()
+ public ArrayList<Float> getVelocityData(ArrayList<Float> fovo)
  {
-  accelerationarr = new float[100];
+  return fovo;
+ }
+ 
+ public ArrayList<Float> getAccelerationData(ArrayList<Float> fopo, ArrayList<Float> fovo)
+ {
+  accelerationarr = new ArrayList<Float>();
+  int j = 0;
+  for (int i = 0; i < fopo.size(); i = i + 2)
+  {
+    float y = 0;
+    y = ((fovo.get(j+1) - fovo.get(j)) / (fopo.get(i+2) - fopo.get(i)));
+    accelerationarr.add(y);
+    j++;
+    if (j > 1474)
+      break;
+  }
+  System.out.println(accelerationarr);
+  System.out.println();
   return accelerationarr;
  }
- 
- public double calculateDerivative()
- {
-  return 0.0; 
- }
- 
  
  public static void main(String[] args) throws FileNotFoundException
  {
   derivativecalculator owen = new derivativecalculator();
   owen.processData();
+  owen.getPositionData(owen.processData());
+  owen.calculateDerivative(owen.getPositionData(owen.processData()));
+  owen.getAccelerationData(owen.getPositionData(owen.processData()), owen.calculateDerivative(owen.getPositionData(owen.processData())));
  }
 }
