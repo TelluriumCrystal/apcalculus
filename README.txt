@@ -12,7 +12,7 @@ The program will consist of four main parts: the .csv reader, the derivative cal
 
 2. Derivative calculator
 
-- public static processdata(long[] data); #should process the data into a velocity array and an acceleration array and store it in the object
+- public static processdata(float[] data); #should process the data into a velocity array and an acceleration array and store it in the object
 
 - public float[] positiondata(); #should return the float array that is currently stored in the class
 
