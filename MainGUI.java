@@ -5,70 +5,83 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.io.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 
 public class MainGUI
 {
+  private File selectedfile;
+  
   // This initilizes the main JFrame
-  public void MainGUI()
+  public MainGUI()
   {
     JFrame.setDefaultLookAndFeelDecorated(true);
     JFrame frame = new JFrame("Data Deriver");
-    //frame.setContentPane(makeGUI(frame));
+    frame.setContentPane(makeGUI(frame));
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setSize(300,180);
     frame.setLocationRelativeTo(null);
     frame.setResizable(true);
     frame.setVisible(true);
+    frame.pack();
   }
   // This creates the action listeners and populates the main JPanel, which is then sent back to the main JFrame
   private JPanel makeGUI(final JFrame frame)
   {
-    // First all the action listeners are created
-    class ActOne extends AbstractAction
-    {
-      public void actionPerformed(ActionEvent e)
-      {
-      }
-    }
-    
-    class ActTwo extends AbstractAction
-    {
-      public void actionPerformed(ActionEvent e)
-      {
-      }
-    }
-    
-    class ActThree extends AbstractAction
-    {
-      public void actionPerformed(ActionEvent e)
-      {
-      }
-    }
-    
-    // Next the JPanel is created and populated
-    
+    // The panel components are instantiated
     JPanel main = new JPanel();
-    main.setLayout(new FlowLayout(FlowLayout.CENTER,5,5));
+    JFileChooser filechooser = new JFileChooser();
+    JLabel filename = new JLabel("No file loaded.");
+    JButton openfile = new JButton("Open");
+    JButton clearfile = new JButton("Clear");
     
-    JLabel randomlabel = new JLabel("Here is a label.");
-    randomlabel.setForeground(new Color(232,195,55));
-    randomlabel.setFont(new Font("Helvetica", Font.BOLD, 14));
-    main.add(randomlabel);
+    // The action listeners are defined
     
-    JButton randombutton = new JButton("Random");
-    randombutton.addActionListener(new ActOne());
-    main.add(randombutton);
+    class OpenFileAction extends AbstractAction
+    {
+      public void actionPerformed(ActionEvent e)
+      {
+        int returnVal = filechooser.showOpenDialog(frame);
+        if(returnVal == JFileChooser.APPROVE_OPTION)
+        {
+          selectedfile = filechooser.getSelectedFile();
+          filename.setText(filechooser.getSelectedFile().getName() + " loaded.");
+          processfile(filechooser.getSelectedFile());
+          frame.pack();
+        }
+      }
+    }
+    class ClearFileAction extends AbstractAction
+    { 
+      public void actionPerformed(ActionEvent e)
+      {
+        selectedfile = null;
+        filename.setText(" No file loaded.");
+        frame.pack();
+      }
+    }
     
-    JButton randombutton2 = new JButton("Random2");
-    randombutton2.addActionListener(new ActTwo());
-    main.add(randombutton2);
+    // The JPanel is populated with components
+
+    main.setLayout(new FlowLayout(FlowLayout.CENTER,5,5));    
+    main.add(filename);
+    openfile.addActionListener(new OpenFileAction());
+    main.add(openfile);
+    clearfile.addActionListener(new ClearFileAction());
+    main.add(clearfile);
+    
+    // And finally the JPanel is sent back to the JFrame
     
     return main;
   }
-  
+
+  public void processfile(File file)
+  {
+    
+  }
+
   public static void main(String[] args)
   {
     new MainGUI();
