@@ -21,11 +21,11 @@ public class MainGUI
     JFrame frame = new JFrame("Data Deriver");
     frame.setContentPane(makeGUI(frame));
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    frame.setSize(300,180);
-    frame.setLocationRelativeTo(null);
     frame.setResizable(true);
-    frame.setVisible(true);
+    frame.setMinimumSize(new Dimension(360,240));
     frame.pack();
+    frame.setLocationRelativeTo(null);
+    frame.setVisible(true);
   }
   // This creates the action listeners and populates the main JPanel, which is then sent back to the main JFrame
   private JPanel makeGUI(final JFrame frame)
@@ -64,8 +64,9 @@ public class MainGUI
     }
     
     // The JPanel is populated with components
-
-    main.setLayout(new FlowLayout(FlowLayout.CENTER,5,5));    
+    
+    main.setLayout(new FlowLayout(FlowLayout.CENTER,5,5));
+    main.setPreferredSize(new Dimension(1080,720));
     main.add(filename);
     openfile.addActionListener(new OpenFileAction());
     main.add(openfile);
