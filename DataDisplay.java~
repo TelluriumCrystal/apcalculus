@@ -22,29 +22,29 @@ public class DataDisplay extends ApplicationFrame
     v = velocity;
     a = acceleration;
   }
-  public DataDisplay(String applicationTitle, String chartTitle)
+  public DataDisplay(String applicationTitle, String chartTitle )
    {
       super(applicationTitle);
       JFreeChart xylineChart = ChartFactory.createXYLineChart(
-         chartTitle,
-         "Time",
-         "m(/s(^2))",
-         createDataset(),
-         PlotOrientation.VERTICAL,
-         true, true, false);
+         chartTitle ,
+         "Time" ,
+         "m(/s(^2))" ,
+         createDataset() ,
+         PlotOrientation.VERTICAL ,
+         true , true , false);
          
-      ChartPanel panel = new ChartPanel(xylineChart);
-      panel.setPreferredSize( new java.awt.Dimension(560, 367));
-      final XYPlot plot = xylineChart.getXYPlot();
-      XYSplineRenderer renderer = new XYSplineRenderer();
-      renderer.setSeriesPaint(0, Color.RED);
-      renderer.setSeriesPaint(1, Color.GREEN);
-      renderer.setSeriesPaint(2, Color.YELLOW);
-      renderer.setSeriesStroke(0, new BasicStroke(4.0f));
-      renderer.setSeriesStroke(1, new BasicStroke(3.0f));
-      renderer.setSeriesStroke(2, new BasicStroke(2.0f));
-      plot.setRenderer(renderer); 
-      setContentPane(panel); 
+      ChartPanel chartPanel = new ChartPanel( xylineChart );
+      chartPanel.setPreferredSize( new java.awt.Dimension( 560 , 367 ) );
+      final XYPlot plot = xylineChart.getXYPlot( );
+      XYSplineRenderer renderer = new XYSplineRenderer( );
+      renderer.setSeriesPaint( 0 , Color.RED );
+      renderer.setSeriesPaint( 1 , Color.GREEN );
+      renderer.setSeriesPaint( 2 , Color.YELLOW );
+      renderer.setSeriesStroke( 0 , new BasicStroke( 4.0f ) );
+      renderer.setSeriesStroke( 1 , new BasicStroke( 3.0f ) );
+      renderer.setSeriesStroke( 2 , new BasicStroke( 2.0f ) );
+      plot.setRenderer( renderer ); 
+      setContentPane( chartPanel ); 
    }
   private XYDataset createDataset()
   {
@@ -74,8 +74,8 @@ public class DataDisplay extends ApplicationFrame
     float[] velocity = {1,5,2,4,3};
     DataDisplay.importData(new float[4], velocity, new float[2]);
     DataDisplay chart = new DataDisplay("Position, Velocity, and Acceleration", "");
-    chart.pack();          
-    RefineryUtilities.centerFrameOnScreen(chart);          
-    chart.setVisible(true);
+      chart.pack( );          
+      RefineryUtilities.centerFrameOnScreen( chart );          
+      chart.setVisible( true );
   }
 }
