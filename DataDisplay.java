@@ -49,19 +49,19 @@ public class DataDisplay extends ApplicationFrame
   private XYDataset createDataset()
   {
     final XYSeries position = new XYSeries( "Position" );
-    for(int i = 0; i<p.length; i++)
+    for(int i = 0; i<p.length; i+=2)
     {
-      position.add(i,p[i]);
+      position.add(p[i],p[i+1]);
     }
     final XYSeries velocity = new XYSeries( "Velocity" );
     for(int i = 0; i<v.length; i++)
     {
-      velocity.add(i,v[i]);
+      velocity.add(i/20.0,v[i]);
     }
     final XYSeries acceleration = new XYSeries( "Acceleration" );
     for(int i = 0; i<a.length; i++)
     {
-      acceleration.add(i,a[i]);
+      acceleration.add(i/20.0,a[i]);
     }
     final XYSeriesCollection dataset = new XYSeriesCollection();
     dataset.addSeries(position);
