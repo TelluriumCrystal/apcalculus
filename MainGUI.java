@@ -1,5 +1,4 @@
 // (c) 2015 Andrew Bennett
-// By Andrew Bennett
 // Made for the UAHS AP Calculus class as part of the end-of-the-year project
 
 import java.awt.*;
@@ -32,6 +31,8 @@ public class MainGUI
   {
     // The panel components are instantiated
     JPanel main = new JPanel();
+    JPanel buttons = new JPanel();
+    JPanel graph = new JPanel();
     JFileChooser filechooser = new JFileChooser();
     JLabel filename = new JLabel("No file loaded.");
     JButton openfile = new JButton("Open");
@@ -63,15 +64,28 @@ public class MainGUI
       }
     }
     
-    // The JPanel is populated with components
+    // The JPanel is populated with components, and is broken up into two main parts: the button panel and the graph panel
     
-    main.setLayout(new FlowLayout(FlowLayout.CENTER,5,5));
+    main.setLayout(new GridBagLayout());
+    GridBagConstraints con = new GridBagConstraints();  // The main layout uses GridBagLayout, which uses a GridBagConstraints class to function
     main.setPreferredSize(new Dimension(1080,720));
-    main.add(filename);
+    con.fill = GridBagConstraints.HORIZONTAL;
+    con.anchor = GridBagConstraints.PAGE_START;
+    con.weightx = 1;
+    con.gridx = 0;
+    con.gridy = 0;
+    main.add(buttons,con);
+    con.fill = GridBagConstraints.BOTH;
+    con.weightx = 1;
+    con.weighty = 1;
+    con.gridx = 0;
+    con.gridy = 1;
+    main.add(graph,con);
+    buttons.add(filename);
     openfile.addActionListener(new OpenFileAction());
-    main.add(openfile);
+    buttons.add(openfile);
     clearfile.addActionListener(new ClearFileAction());
-    main.add(clearfile);
+    buttons.add(clearfile);
     
     // And finally the JPanel is sent back to the JFrame
     
