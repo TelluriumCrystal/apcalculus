@@ -1,4 +1,6 @@
 import javax.swing.JPanel;
+import javax.swing.JFrame;
+import java.util.ArrayList;
 import java.awt.Color; 
 import java.awt.BasicStroke; 
 import org.jfree.chart.ChartPanel; 
@@ -10,72 +12,130 @@ import org.jfree.ui.RefineryUtilities;
 import org.jfree.chart.plot.XYPlot; 
 import org.jfree.chart.ChartFactory; 
 import org.jfree.chart.plot.PlotOrientation; 
+import java.io.FileNotFoundException;
 import org.jfree.data.xy.XYSeriesCollection; 
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
+import java.awt.BorderLayout;
 
 public class DataDisplay extends ApplicationFrame
 {
-  static float[] p, v, a;
-  public static void importData(float[] position, float[] velocity, float[] acceleration)
+  static ArrayList<Float> p, v, a;
+  private String title;
+  
+  //imports the position velocity and acceleration to the class in the form of ArrayLists
+  public static void importData(ArrayList<Float> position, ArrayList<Float> velocity, ArrayList<Float> acceleration)
   {
     p = position;
     v = velocity;
     a = acceleration;
   }
-  public DataDisplay(String applicationTitle, String chartTitle)
+  
+  //Constructor for class, takes in a string either "Position" "Velocity" or "Acceleration"
+  public DataDisplay(String applicationTitle)
    {
       super(applicationTitle);
-      JFreeChart xylineChart = ChartFactory.createXYLineChart(
-         chartTitle,
-         "Time",
-         "m(/s(^2))",
-         createDataset(),
-         PlotOrientation.VERTICAL,
-         true, true, false);
-         
-      ChartPanel panel = new ChartPanel(xylineChart);
-      panel.setPreferredSize( new java.awt.Dimension(560, 367));
-      final XYPlot plot = xylineChart.getXYPlot();
-      XYSplineRenderer renderer = new XYSplineRenderer();
-      renderer.setSeriesPaint(0, Color.RED);
-      renderer.setSeriesPaint(1, Color.GREEN);
-      renderer.setSeriesPaint(2, Color.YELLOW);
-      renderer.setSeriesStroke(0, new BasicStroke(4.0f));
-      renderer.setSeriesStroke(1, new BasicStroke(3.0f));
-      renderer.setSeriesStroke(2, new BasicStroke(2.0f));
-      plot.setRenderer(renderer); 
-      setContentPane(panel); 
+      title = applicationTitle;   
    }
   private XYDataset createDataset()
   {
     final XYSeries position = new XYSeries( "Position" );
-    for(int i = 0; i<p.length; i+=2)
+    for(int i = 0; i<p.size(); i+=2)
     {
-      position.add(p[i],p[i+1]);
-    }
-    final XYSeries velocity = new XYSeries( "Velocity" );
-    for(int i = 0; i<v.length; i++)
-    {
-      velocity.add(i/20.0,v[i]);
-    }
-    final XYSeries acceleration = new XYSeries( "Acceleration" );
-    for(int i = 0; i<a.length; i++)
-    {
-      acceleration.add(i/20.0,a[i]);
+      position.add(p.get(i),p.get(i+1));
     }
     final XYSeriesCollection dataset = new XYSeriesCollection();
     dataset.addSeries(position);
-    dataset.addSeries(velocity);
-    dataset.addSeries(acceleration);
     return dataset;
   }
-  public static void main(String[] args)
+  
+  //returns a graph in a jpanel whose border automatically fits the size of the graph
+  public JPanel getGraph()
   {
-    float[] velocity = {1,5,2,4,3};
-    DataDisplay.importData(new float[4], velocity, new float[2]);
-    DataDisplay chart = new DataDisplay("Position, Velocity, and Acceleration", "");
-    chart.pack();          
-    RefineryUtilities.centerFrameOnScreen(chart);          
-    chart.setVisible(true);
+    String unit = "";
+    XYSeries data;
+    Color color = Color.BLACK;
+    if(title.toLowerCase().equals("position"))
+    {
+      unit = "Feet";
+      data = new XYSeries("Position");
+      color = Color.RED;
+      for(int i = 0; i<p.size(); i+=2)
+      {
+        data.add(p.get(i),p.get(i+1));
+      }
+    }
+    else if(title.toLowerCase().equals("acceleration"))
+    {
+      unit = "Feet/Second^2";
+      data = new XYSeries( "Acceleration" );
+      color = Color.YELLOW;
+      for(int i = 0; i<a.size(); i++)
+      {
+        data.add(i/10.0,a.get(i));
+      }
+    }
+    else if(title.toLowerCase().equals("velocity"))
+    {
+      unit = "Feet/Second^";
+      data = new XYSeries("Velocity");
+      color = Color.GREEN;
+      for(int i = 0; i<v.size(); i++)
+      {
+        data.add(i/10.0,v.get(i));
+      }
+    }
+    else
+    {
+      data = new XYSeries("");
+    }
+    XYSeriesCollection dataset = new XYSeriesCollection();
+    dataset.addSeries(data);
+    JFreeChart ok = ChartFactory.createXYLineChart(
+                                                   title,
+                                                   "Time",
+                                                   unit,
+                                                   dataset,
+                                                   PlotOrientation.VERTICAL,
+                                                   true, true, false);
+    ChartPanel ch = new ChartPanel(ok);
+    final XYPlot plot = ok.getXYPlot();
+    XYSplineRenderer renderer = new XYSplineRenderer();
+    renderer.setSeriesPaint(0, color);
+    renderer.setSeriesStroke(0, new BasicStroke(4.0f));
+    plot.setRenderer(renderer); 
+    setContentPane(ch);  
+    JPanel j = new JPanel();
+    j.setLayout(new java.awt.BorderLayout());
+    j.add(ch, BorderLayout.CENTER);
+    j.validate();
+    return j;
+  }
+  public static void main(String[] args) throws FileNotFoundException
+  {
+    derivativecalculator calc = new derivativecalculator();
+    DataDisplay.importData(calc.getPositionData(calc.processData()), calc.calculateDerivative(calc.getPositionData(calc.processData())), calc.getAccelerationData(calc.getPositionData(calc.processData()), calc.calculateDerivative(calc.getPositionData(calc.processData()))));
+    DataDisplay chart = new DataDisplay("Position");
+    JFrame frame = new JFrame();
+    frame.add(chart.getGraph());
+    frame.pack();
+    frame.setVisible(true);
+    DataDisplay cha = new DataDisplay("Velocity");
+    JFrame fram = new JFrame();
+    fram.add(cha.getGraph());
+    fram.pack();
+    fram.setVisible(true);
+//    chart.pack();
+//    RefineryUtilities.centerFrameOnScreen(chart);  
+//    chart.setVisible(true);
+//    DataDisplayVelocity.importData(calc.calculateDerivative(calc.getPositionData(calc.processData())));
+//    DataDisplayVelocity cha = new DataDisplayVelocity("Velocity", "");
+//    cha.pack();          
+//    RefineryUtilities.centerFrameOnScreen(cha);          
+//    cha.setVisible(true);
+//    DataDisplayAcceleration.importData(calc.getAccelerationData(calc.getPositionData(calc.processData()), calc.calculateDerivative(calc.getPositionData(calc.processData()))));
+//    DataDisplayAcceleration ch = new DataDisplayAcceleration("Acceleration", "");
+//    ch.pack();          
+//    RefineryUtilities.centerFrameOnScreen(ch);          
+//    ch.setVisible(true);
   }
 }
