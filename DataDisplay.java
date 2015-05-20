@@ -19,6 +19,10 @@ import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import java.awt.BorderLayout;
 import java.awt.geom.Ellipse2D;
+
+// This file uses the third-party libraries jcommon 1.0.23 and jfreechart 1.0.19
+// These can be downloaded from: http://sourceforge.net/projects/jfreechart/files/
+
 public class DataDisplay extends ApplicationFrame
 {
   static ArrayList<Float> p, v, a;
