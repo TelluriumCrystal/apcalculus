@@ -75,8 +75,8 @@ public class derivativecalculator
    positionarr.add(fopo.get(i));
    positionarr.add(fopo.get(i+1));
   }
-  System.out.println(positionarr);
-  System.out.println();
+  // System.out.println(positionarr);
+  // System.out.println();
   return positionarr;
  }
  
@@ -89,8 +89,8 @@ public class derivativecalculator
    x = ((fopo.get(i+3) - fopo.get(i+1)) / (fopo.get(i+2) - fopo.get(i)));
    velocityarr.add(x);
   }
-  System.out.println(velocityarr);
-  System.out.println();
+  // System.out.println(velocityarr);
+  // System.out.println();
   return velocityarr; 
  }
  
@@ -115,6 +115,54 @@ public class derivativecalculator
   System.out.println(accelerationarr);
   System.out.println();
   return accelerationarr;
+ }
+ 
+ public static float getAverageOfPosition(ArrayList<Float> fopo)
+ {
+  float sum = 0;
+   for (int i = 1; i < fopo.size(); i = i + 2)
+   {
+    sum += fopo.get(i); 
+   }
+   return sum / fopo.size();
+ }
+ 
+ public static float getAverage(ArrayList<Float> foall)
+ {
+  float sum = 0;
+   for (float i : foall)
+   {
+    sum += i; 
+   }
+   return sum / foall.size();
+ }
+ 
+ public static float getStandardDeviation(ArrayList<Float> foall)
+ {
+  float average = getAverage(foall);
+  float variance = 0;
+  float stdev = 0;
+   for (float i : foall)
+   {
+    variance += Math.pow((i - average), 2);
+   }
+  stdev = variance / (foall.size() - 1);
+  stdev = (float)Math.sqrt(stdev);
+  return stdev;
+ }
+ 
+ public static float getStandardDeviationOfPosition(ArrayList<Float> fopo)
+ {
+  float average = getAverageOfPosition(fopo);
+  float variance = 0;
+  float stdev = 0;
+   for (int i = 1; i < fopo.size(); i = i + 2)
+   {
+    variance += Math.pow((i - average), 2);
+   }
+  stdev = variance / (fopo.size() - 1);
+  stdev = (float)Math.sqrt(stdev);
+  return stdev;
  }
  
  public static void main(String[] args) throws FileNotFoundException
