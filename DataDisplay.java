@@ -11,12 +11,14 @@ import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.RefineryUtilities; 
 import org.jfree.chart.plot.XYPlot; 
 import org.jfree.chart.ChartFactory; 
+import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.plot.PlotOrientation; 
 import java.io.FileNotFoundException;
 import org.jfree.data.xy.XYSeriesCollection; 
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import java.awt.BorderLayout;
-
+import java.awt.geom.Ellipse2D;
 public class DataDisplay extends ApplicationFrame
 {
   static ArrayList<Float> p, v, a;
@@ -56,7 +58,7 @@ public class DataDisplay extends ApplicationFrame
     Color color = Color.BLACK;
     if(title.toLowerCase().equals("position"))
     {
-      unit = "Feet";
+      unit = "Feet (in thousands)";
       data = new XYSeries("Position");
       color = Color.RED;
       for(int i = 0; i<p.size(); i+=2)
@@ -66,7 +68,7 @@ public class DataDisplay extends ApplicationFrame
     }
     else if(title.toLowerCase().equals("acceleration"))
     {
-      unit = "Feet/Second^2";
+      unit = "Feet/Second^2 (in thousands)";
       data = new XYSeries( "Acceleration" );
       color = Color.YELLOW;
       for(int i = 0; i<a.size(); i++)
@@ -76,7 +78,7 @@ public class DataDisplay extends ApplicationFrame
     }
     else if(title.toLowerCase().equals("velocity"))
     {
-      unit = "Feet/Second^";
+      unit = "Feet/Second (in thousands)";
       data = new XYSeries("Velocity");
       color = Color.GREEN;
       for(int i = 0; i<v.size(); i++)
@@ -97,11 +99,16 @@ public class DataDisplay extends ApplicationFrame
                                                    dataset,
                                                    PlotOrientation.VERTICAL,
                                                    true, true, false);
+    XYPlot pl = (XYPlot)ok.getPlot();
+    NumberAxis range = (NumberAxis)pl.getRangeAxis();
+    range.setRange(0,2);
+    range.setTickUnit(new NumberTickUnit(0.2));
     ChartPanel ch = new ChartPanel(ok);
     final XYPlot plot = ok.getXYPlot();
     XYSplineRenderer renderer = new XYSplineRenderer();
     renderer.setSeriesPaint(0, color);
-    renderer.setSeriesStroke(0, new BasicStroke(4.0f));
+    renderer.setSeriesStroke(0, new BasicStroke(1.0f));
+    renderer.setSeriesShape(0, new Ellipse2D.Double(0,0,0,0));
     plot.setRenderer(renderer); 
     setContentPane(ch);  
     JPanel j = new JPanel();
