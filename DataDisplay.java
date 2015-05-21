@@ -38,17 +38,6 @@ public class DataDisplay extends ApplicationFrame
       super(applicationTitle);
       title = applicationTitle;   
    }
-  private XYDataset createDataset() 
-  {
-    final XYSeries position = new XYSeries( "Position" );
-    for(int i = 0; i<p.size(); i+=2)
-    {
-      position.add(p.get(i),p.get(i+1));
-    }
-    final XYSeriesCollection dataset = new XYSeriesCollection();
-    dataset.addSeries(position);
-    return dataset;
-  }
   
   //returns a graph in a jpanel whose border automatically fits the size of the graph
   public JPanel getGraph() throws FileNotFoundException
@@ -59,6 +48,7 @@ public class DataDisplay extends ApplicationFrame
     derivativecalculator it = new derivativecalculator();
     float av = 0;
     float stdev = 0;
+    //creates a dataset based on what kind of graph the person wants, position, acceleration, or velocity based on what the class was created as
     if(title.toLowerCase().equals("position"))
     {
       unit = "Feet";
@@ -68,6 +58,7 @@ public class DataDisplay extends ApplicationFrame
       {
         data.add(p.get(i),p.get(i+1));
       }
+      //finds the average and standard deviation and stores them
       av = derivativecalculator.getAverageOfPosition(it.getPositionData(it.processData()));
       stdev = derivativecalculator.getStandardDeviationOfPosition(it.getPositionData(it.processData()));
     }
@@ -80,6 +71,7 @@ public class DataDisplay extends ApplicationFrame
       {
         data.add(i/10.0,a.get(i));
       }
+      //finds the average and standard deviation and stores them
       av = derivativecalculator.getAverage(it.getAccelerationData(it.getPositionData(it.processData()), it.calculateDerivative(it.getPositionData(it.processData()))));
       stdev = derivativecalculator.getStandardDeviation(it.getAccelerationData(it.getPositionData(it.processData()), it.calculateDerivative(it.getPositionData(it.processData()))));
     }
@@ -92,6 +84,7 @@ public class DataDisplay extends ApplicationFrame
       {
         data.add(i/10.0,v.get(i));
       }
+      //finds the average and standard deviation and stores them
       av = derivativecalculator.getAverage(it.calculateDerivative(it.getPositionData(it.processData())));
       stdev = derivativecalculator.getStandardDeviation(it.calculateDerivative(it.getPositionData(it.processData())));
     }
@@ -99,8 +92,10 @@ public class DataDisplay extends ApplicationFrame
     {
       data = new XYSeries("");
     }
+    //stores the XYSeries in a XYSeriesCollection
     XYSeriesCollection dataset = new XYSeriesCollection();
     dataset.addSeries(data);
+    //creates a graph with the data and a title based on the way the class was instantiated
     JFreeChart ok = ChartFactory.createXYLineChart(
                                                    title,
                                                    "Time",
@@ -108,16 +103,17 @@ public class DataDisplay extends ApplicationFrame
                                                    dataset,
                                                    PlotOrientation.VERTICAL,
                                                    true, true, false);
-    XYPlot pl = (XYPlot)ok.getPlot();
-    NumberAxis range = (NumberAxis)pl.getRangeAxis();
+    //creates a plot to set the range and domain
+    XYPlot plot = (XYPlot)ok.getPlot();
+    NumberAxis range = (NumberAxis)plot.getRangeAxis();
     System.out.println(av+(stdev*3));
     if(title.toLowerCase().equals("position"))
       range.setRange(0,av+(stdev*2));
     else if(title.toLowerCase().equals("velocity") || title.toLowerCase().equals("acceleration"))
       range.setRange(av-(stdev*2), av+(stdev*2));
     range.setTickUnit(new NumberTickUnit((av+stdev*3)/10));
+    //puts the plot into a chartpanel which allows it to be put in the j panel
     ChartPanel ch = new ChartPanel(ok);
-    final XYPlot plot = ok.getXYPlot();
     XYSplineRenderer renderer = new XYSplineRenderer();
     renderer.setSeriesPaint(0, color);
     renderer.setSeriesStroke(0, new BasicStroke(1.0f));
@@ -130,6 +126,8 @@ public class DataDisplay extends ApplicationFrame
     j.validate();
     return j;
   }
+  
+  //just a bunch of testing
   public static void main(String[] args) throws FileNotFoundException
   {
     derivativecalculator calc = new derivativecalculator();

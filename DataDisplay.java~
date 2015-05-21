@@ -38,7 +38,7 @@ public class DataDisplay extends ApplicationFrame
       super(applicationTitle);
       title = applicationTitle;   
    }
-  private XYDataset createDataset()
+  private XYDataset createDataset() 
   {
     final XYSeries position = new XYSeries( "Position" );
     for(int i = 0; i<p.size(); i+=2)
@@ -51,40 +51,49 @@ public class DataDisplay extends ApplicationFrame
   }
   
   //returns a graph in a jpanel whose border automatically fits the size of the graph
-  public JPanel getGraph()
+  public JPanel getGraph() throws FileNotFoundException
   {
     String unit = "";
     XYSeries data;
     Color color = Color.BLACK;
+    derivativecalculator it = new derivativecalculator();
+    float av = 0;
+    float stdev = 0;
     if(title.toLowerCase().equals("position"))
     {
-      unit = "Feet (in thousands)";
+      unit = "Feet";
       data = new XYSeries("Position");
       color = Color.RED;
       for(int i = 0; i<p.size(); i+=2)
       {
         data.add(p.get(i),p.get(i+1));
       }
+      av = derivativecalculator.getAverageOfPosition(it.getPositionData(it.processData()));
+      stdev = derivativecalculator.getStandardDeviationOfPosition(it.getPositionData(it.processData()));
     }
     else if(title.toLowerCase().equals("acceleration"))
     {
-      unit = "Feet/Second^2 (in thousands)";
+      unit = "Feet/Second^2";
       data = new XYSeries( "Acceleration" );
       color = Color.YELLOW;
       for(int i = 0; i<a.size(); i++)
       {
         data.add(i/10.0,a.get(i));
       }
+      av = derivativecalculator.getAverage(it.getAccelerationData(it.getPositionData(it.processData()), it.calculateDerivative(it.getPositionData(it.processData()))));
+      stdev = derivativecalculator.getStandardDeviation(it.getAccelerationData(it.getPositionData(it.processData()), it.calculateDerivative(it.getPositionData(it.processData()))));
     }
     else if(title.toLowerCase().equals("velocity"))
     {
-      unit = "Feet/Second (in thousands)";
+      unit = "Feet/Second";
       data = new XYSeries("Velocity");
       color = Color.GREEN;
       for(int i = 0; i<v.size(); i++)
       {
         data.add(i/10.0,v.get(i));
       }
+      av = derivativecalculator.getAverage(it.calculateDerivative(it.getPositionData(it.processData())));
+      stdev = derivativecalculator.getStandardDeviation(it.calculateDerivative(it.getPositionData(it.processData())));
     }
     else
     {
@@ -101,8 +110,12 @@ public class DataDisplay extends ApplicationFrame
                                                    true, true, false);
     XYPlot pl = (XYPlot)ok.getPlot();
     NumberAxis range = (NumberAxis)pl.getRangeAxis();
-    range.setRange(0,2);
-    range.setTickUnit(new NumberTickUnit(0.2));
+    System.out.println(av+(stdev*3));
+    if(title.toLowerCase().equals("position"))
+      range.setRange(0,av+(stdev*2));
+    else if(title.toLowerCase().equals("velocity") || title.toLowerCase().equals("acceleration"))
+      range.setRange(av-(stdev*2), av+(stdev*2));
+    range.setTickUnit(new NumberTickUnit((av+stdev*3)/10));
     ChartPanel ch = new ChartPanel(ok);
     final XYPlot plot = ok.getXYPlot();
     XYSplineRenderer renderer = new XYSplineRenderer();
@@ -131,6 +144,11 @@ public class DataDisplay extends ApplicationFrame
     fram.add(cha.getGraph());
     fram.pack();
     fram.setVisible(true);
+    DataDisplay ch = new DataDisplay("Acceleration");
+    JFrame fra = new JFrame();
+    fra.add(ch.getGraph());
+    fra.pack();
+    fra.setVisible(true);
 //    chart.pack();
 //    RefineryUtilities.centerFrameOnScreen(chart);  
 //    chart.setVisible(true);
