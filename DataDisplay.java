@@ -127,7 +127,7 @@ public class DataDisplay extends ApplicationFrame
     return j;
   }
   
-  //just a bunch of testing
+  //just a bunch of testing stuf
   public static void main(String[] args) throws FileNotFoundException
   {
     derivativecalculator calc = new derivativecalculator();
