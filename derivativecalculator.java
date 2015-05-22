@@ -75,13 +75,8 @@ public class derivativecalculator
    positionarr.add(fopo.get(i));
    positionarr.add(fopo.get(i+1));
   }
-<<<<<<< HEAD
   //System.out.println(positionarr);
   //System.out.println();
-=======
-  System.out.println(positionarr);
-  System.out.println();
->>>>>>> origin/master
   return positionarr;
  }
  
@@ -94,13 +89,8 @@ public class derivativecalculator
    x = ((fopo.get(i+3) - fopo.get(i+1)) / (fopo.get(i+2) - fopo.get(i)));
    velocityarr.add(x);
   }
-<<<<<<< HEAD
   //System.out.println(velocityarr);
   //System.out.println();
-=======
-  System.out.println(velocityarr);
-  System.out.println();
->>>>>>> origin/master
   return velocityarr; 
  }
  
@@ -122,7 +112,6 @@ public class derivativecalculator
     if (j > 1474)
       break;
   }
-<<<<<<< HEAD
   //System.out.println(accelerationarr);
   //System.out.println();
   return accelerationarr;
@@ -176,13 +165,6 @@ public class derivativecalculator
   System.out.println(stdev);
   return stdev;
  }
-=======
-  System.out.println(accelerationarr);
-  System.out.println();
-  return accelerationarr;
- }
- 
->>>>>>> origin/master
  public static void main(String[] args) throws FileNotFoundException
  {
   derivativecalculator owen = new derivativecalculator();
