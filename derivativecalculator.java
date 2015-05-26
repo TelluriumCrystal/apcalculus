@@ -7,18 +7,29 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class derivativecalculator
+public class DerivativeCalculator
 {
  
  private ArrayList<Float> numarr;
  private ArrayList<Float> positionarr;
  private ArrayList<Float> velocityarr;
  private ArrayList<Float> accelerationarr;
-  
+ private File storedFile;
+ 
+ public DerivativeCalculator()
+ {
+   storedFile = new File("Launch 3.csv");
+ }
+ 
+ public DerivativeCalculator(File file)
+ {
+   storedFile = file;
+ }
+ 
  public ArrayList<Float> processData() throws FileNotFoundException
  {
   numarr = new ArrayList<Float>();
-  BufferedReader in = new BufferedReader(new FileReader("Launch 3.csv"));
+  BufferedReader in = new BufferedReader(new FileReader(storedFile));
   String line = "";
   boolean check = true;
   while (check == true)
@@ -167,7 +178,7 @@ public class derivativecalculator
  }
  public static void main(String[] args) throws FileNotFoundException
  {
-  derivativecalculator owen = new derivativecalculator();
+  DerivativeCalculator owen = new DerivativeCalculator();
   owen.processData();
   owen.getPositionData(owen.processData());
   owen.calculateDerivative(owen.getPositionData(owen.processData()));
