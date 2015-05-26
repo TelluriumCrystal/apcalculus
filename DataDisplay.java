@@ -43,17 +43,6 @@ public class DataDisplay extends ApplicationFrame
       super(applicationTitle);
       title = applicationTitle;   
    }
-  private XYDataset createDataset() 
-  {
-    final XYSeries position = new XYSeries( "Position" );
-    for(int i = 0; i<p.size(); i+=2)
-    {
-      position.add(p.get(i),p.get(i+1));
-    }
-    final XYSeriesCollection dataset = new XYSeriesCollection();
-    dataset.addSeries(position);
-    return dataset;
-  }
   
   //returns a graph in a jpanel whose border automatically fits the size of the graph
   public JPanel getGraph() throws FileNotFoundException
@@ -122,8 +111,6 @@ public class DataDisplay extends ApplicationFrame
     //creates a plot to set the range and domain
     XYPlot plot = (XYPlot)ok.getPlot();
     NumberAxis range = (NumberAxis)plot.getRangeAxis();
-    //XYPlot pl = (XYPlot)ok.getPlot();
-    //NumberAxis range = (NumberAxis)pl.getRangeAxis();
     System.out.println(av+(stdev*3));
     if(title.toLowerCase().equals("position"))
       range.setRange(0,av+(stdev*2));
@@ -132,8 +119,6 @@ public class DataDisplay extends ApplicationFrame
     range.setTickUnit(new NumberTickUnit((av+stdev*3)/10));
     //puts the plot into a chartpanel which allows it to be put in the j panel
     ChartPanel ch = new ChartPanel(ok);
-    //ChartPanel ch = new ChartPanel(ok);
-    /*final XYPlot */plot = ok.getXYPlot();
     XYSplineRenderer renderer = new XYSplineRenderer();
     renderer.setSeriesPaint(0, color);
     renderer.setSeriesStroke(0, new BasicStroke(1.0f));
@@ -147,7 +132,7 @@ public class DataDisplay extends ApplicationFrame
     return j;
   }
   
-  //just a bunch of testing stuff
+  //just a bunch of testing
   public static void main(String[] args) throws FileNotFoundException
   {
     DerivativeCalculator calc = new DerivativeCalculator();
